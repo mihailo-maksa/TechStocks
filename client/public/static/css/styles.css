@@ -1,0 +1,22 @@
+:root {
+  --primary-color: #28a745;
+  --dark-bg-color: #343a40;
+}
+
+#nprogress .bar {
+  height: 4px !important;
+  background: var(--primary-color) !important;
+}
+
+.nav {
+  height: 65px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  font-weight: bold;
+}
+
+.bold-btn {
+  font-weight: 500;
+  border: 1.45px solid;
+}

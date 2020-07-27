@@ -1,0 +1,29 @@
+{
+  "name": "TechStocks",
+  "version": "1.0.0",
+  "description": "A place for everyone to share their favorite tech stock picks. Let's beat the market together!",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mihailo-maksa/TechStocks.git"
+  },
+  "keywords": [],
+  "author": "Mihailo Maksa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mihailo-maksa/TechStocks/issues"
+  },
+  "homepage": "https://github.com/mihailo-maksa/TechStocks#readme",
+  "dependencies": {
+    "@zeit/next-css": "^1.0.1",
+    "next": "^9.4.4",
+    "nprogress": "^0.2.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
