@@ -11,6 +11,14 @@ Router.onRouteChangeError = (url) => NProgress.done();
 const Layout = ({ children }) => {
   const head = () => (
     <Head>
+      <title>Discover & Share Your Favorite Tech Stocks | TechStocks</title>
+      <meta
+        name="description"
+        content="A place for everyone to share their favorite tech stock picks. Let's beat the market together!"
+      />
+      <link rel="canonical" href="http://example.com/" />
+      <meta name="robots" content="index, follow" />
+      <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       {/* Bootstrap CDN */}
       <link
         rel="stylesheet"

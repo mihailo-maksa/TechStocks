@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 
 const Register = () => {
   const [userData, setUserData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: ""
   });
@@ -20,12 +20,12 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.table({
-      name: userData.name,
+      username: userData.username,
       email: userData.email,
       password: userData.password
     });
     setUserData({
-      name: "",
+      username: "",
       email: "",
       password: ""
     });
@@ -36,11 +36,11 @@ const Register = () => {
       <div className="form-group">
         <input
           onChange={handleChange}
-          value={userData.name}
-          name="name"
+          value={userData.username}
+          name="username"
           type="text"
           className="form-control"
-          placeholder="Name"
+          placeholder="Username"
           required
         />
       </div>
