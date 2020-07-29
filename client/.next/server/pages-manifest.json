@@ -1,1 +1,1 @@
-{"/_app":"static/development/pages/_app.js","/_document":"static/development/pages/_document.js","/_error":"static/development/pages/_error.js","/register":"static/development/pages/register.js"}
+{"/_app":"static/development/pages/_app.js","/_document":"static/development/pages/_document.js","/_error":"static/development/pages/_error.js","/auth/activate/[id]":"static/development/pages/auth/activate/[id].js","/register":"static/development/pages/register.js"}

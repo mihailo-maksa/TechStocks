@@ -1,5 +1,8 @@
 import { useState } from "react";
 import Layout from "../components/Layout";
+import axios from "axios";
+import { showErrorMessage, showSuccessMessage } from "../utils/alerts";
+import { API } from "../config";
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -17,18 +20,34 @@ const Register = () => {
     setUserData({ ...userData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.table({
-      username: userData.username,
-      email: userData.email,
-      password: userData.password
-    });
-    setUserData({
-      username: "",
-      email: "",
-      password: ""
-    });
+    setButtonText("Registering...");
+
+    try {
+      const res = await axios.post(
+        `${API}/register`,
+        {
+          // body
+          username: userData.username,
+          email: userData.email,
+          password: userData.password
+        },
+        { headers: { "Content-Type": "application/json" } } // config
+      );
+
+      setUserData({
+        username: "",
+        email: "",
+        password: ""
+      });
+      setButtonText("Submitted");
+      setSuccess(res.data.message);
+    } catch (err) {
+      setUserData({ ...userData, password: "" });
+      setButtonText("Register");
+      setError(err.response.data.error);
+    }
   };
 
   const registerForm = () => (
@@ -87,8 +106,10 @@ const Register = () => {
   return (
     <Layout>
       <div className="col-md-6 offset-md-3">
-        <h1>Register</h1>
+        <h1 className="text-center">Register</h1>
         <br />
+        {success && showSuccessMessage(success)}
+        {error && showErrorMessage(error)}
         {registerForm()}
       </div>
     </Layout>
