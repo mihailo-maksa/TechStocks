@@ -13,6 +13,9 @@ const ActivateAccount = ({ router }) => {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
+  const closeSuccessAlert = () => setSuccess(null);
+  const closeErrorAlert = () => setError(null);
+
   useEffect(() => {
     let token = router.query.id;
     if (token) {
@@ -47,10 +50,12 @@ const ActivateAccount = ({ router }) => {
     <Layout>
       <div className="row">
         <div className="col-md-6 offset-md-3">
-          <h1 className="text-center">Welcome to TechStocks, {name}!</h1>
+          <h1 className="text-center">
+            Welcome to TechStocks, {name && name}!
+          </h1>
           <br />
-          {success && showSuccessMessage(success)}
-          {error && showErrorMessage(error)}
+          {success && showSuccessMessage(success, closeSuccessAlert)}
+          {error && showErrorMessage(error, closeErrorAlert)}
           <button
             onClick={handleClick}
             className="btn btn-outline-success btn-block bold-btn"

@@ -1,6 +1,18 @@
+/* Global Styles */
+
 :root {
   --primary-color: #28a745;
   --dark-bg-color: #343a40;
+}
+
+html,
+body {
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 #nprogress .bar {
@@ -8,6 +20,37 @@
   background: var(--primary-color) !important;
 }
 
+.bold-btn {
+  font-weight: 500;
+  border: 1.45px solid;
+}
+
+.badge {
+  font-size: 1em;
+  padding: 5px;
+}
+
+.eye-btn {
+  cursor: pointer;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.bolder {
+  font-weight: bolder;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.upload-image-btn {
+  margin-bottom: 0;
+}
+
+/* Layout.js */
 .nav {
   height: 65px;
   display: flex;
@@ -16,7 +59,25 @@
   font-weight: bold;
 }
 
-.bold-btn {
+/* alerts.js */
+.alert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.x-btn {
   font-weight: 500;
-  border: 1.45px solid;
+  font-size: 1.25em;
+  cursor: pointer;
+}
+
+/* Home Page  */
+.category-link {
+  border: 1px solid var(--primary-color);
+}
+
+.category-img {
+  width: 100px;
+  height: auto;
 }

@@ -12,10 +12,13 @@ connectDB(process.env.MONGO_URI);
 // Init Middleware
 app.use(morgan("dev"));
 app.use(express.json({ extended: false }));
+app.use(express.json({ limit: "5mb", type: "application/json" }));
 app.use(cors({ origin: process.env.CLIENT_URL }));
 
 // Define Routes
 app.use("/api", require("./routes/auth"));
+app.use("/api", require("./routes/user"));
+app.use("/api", require("./routes/category"));
 
 const PORT = process.env.PORT;
 
