@@ -52,6 +52,16 @@ const Layout = ({ children }) => {
         </Link>
       </li>
 
+      <li className="nav-item">
+        <Link href="/user/stock/create">
+          <a className="nav-link text-light btn btn-success bold">
+            <i className="fas fa-plus" />
+            {"  "}
+            Add Stock
+          </a>
+        </Link>
+      </li>
+
       {!isAuth() && (
         <React.Fragment>
           <li className="nav-item ml-auto">
@@ -92,6 +102,7 @@ const Layout = ({ children }) => {
       {isAuth() && (
         <li className="nav-item">
           <a onClick={logout} className="nav-link text-light pointer">
+            <i className="fas fa-sign-out-alt" /> {"  "}
             Logout
           </a>
         </li>

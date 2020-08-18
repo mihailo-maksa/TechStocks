@@ -19,6 +19,7 @@ app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use("/api", require("./routes/auth"));
 app.use("/api", require("./routes/user"));
 app.use("/api", require("./routes/category"));
+app.use("/api", require("./routes/stock"));
 
 const PORT = process.env.PORT;
 

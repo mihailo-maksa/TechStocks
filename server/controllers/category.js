@@ -37,6 +37,9 @@ exports.create = (req, res) => {
     category.image.url = data.Location;
     category.image.key = data.Key;
 
+    // add the id of the user that created the category
+    category.postedBy = req.user._id;
+
     // save to MongoDB
     category.save((err, success) => {
       if (err) {
@@ -52,7 +55,7 @@ exports.list = async (req, res) => {
     const categories = await Category.find();
 
     if (!categories) {
-      return res.status(400).json({ error: "No categories found." });
+      return res.status(400).json({ error: "Couldn't list categories." });
     }
 
     res.json(categories);
@@ -67,7 +70,7 @@ exports.read = async (req, res) => {
     const category = await Category.findById(req.params.slug);
 
     if (!category) {
-      return res.status(400).json({ error: "No category found." });
+      return res.status(400).json({ error: "Couldn't find category." });
     }
 
     res.json(category);
