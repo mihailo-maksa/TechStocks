@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
 const User = require("../models/User");
+const Stock = require("../models/Stock");
 const jwt = require("jsonwebtoken");
 const shortId = require("shortId");
 const expressJwt = require("express-jwt");
@@ -295,5 +296,28 @@ exports.resetPassword = async (req, res) => {
         }
       }
     );
+  }
+};
+
+exports.canUpdateDeleteStock = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const stock = await Stock.findOne({ _id: id });
+
+    if (!stock) {
+      return res.status(400).json({ error: "Couldn't find stock." });
+    }
+
+    if (stock.postedBy.toString() !== req.user._id.toString()) {
+      return res
+        .status(401)
+        .json({ error: "You are unauthorized to perform this action." });
+    }
+
+    next();
+  } catch (err) {
+    console.error(`canUpdateDeleteStock middleware error: `, err);
+    res.status(500).send("Internal server error.");
   }
 };

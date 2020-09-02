@@ -1,33 +1,33 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { API } from "../../../config";
-import Layout from "../../../components/Layout";
-import { showErrorMessage, showSuccessMessage } from "../../../utils/alerts";
 import dynamic from "next/dynamic";
-import { getCookie, isAuth } from "../../../utils/auth";
+import { useState, useEffect } from "react";
+import { API } from "../../../config";
+import axios from "axios";
+import Layout from "../../../components/Layout";
+import withUser from "../../withUser";
+import { showErrorMessage, showSuccessMessage } from "../../../utils/alerts";
 import "react-quill/dist/quill.bubble.css";
-const Quill = dynamic(() => import("react-quill"), { ssr: false });
+import { isAuth } from "../../../utils/auth";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-const Create = ({ token }) => {
-  const [stockData, setStockData] = useState({
-    name: "", // text input
-    url: "", // text input
-    type: "", // radio inputs
-    categories: [], // checkboxes (array)
-    rating: "", // radio inputs
-    ticker: "", // text input
-    description: "" // textarea (with rich text editor)
+const Update = ({ oldStock, token }) => {
+  const [updateData, setUpdateData] = useState({
+    name: oldStock.name,
+    ticker: oldStock.ticker,
+    description: oldStock.description,
+    url: oldStock.url,
+    categories: oldStock.categories,
+    type: oldStock.type,
+    rating: oldStock.rating
   });
-  const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [buttonText, setButtonText] = useState("Update Stock");
   const [loadedCategories, setLoadedCategories] = useState([]);
-  const [buttonText, setButtonText] = useState("Submit");
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
         const res = await axios.get(`${API}/categories`);
-
         setLoadedCategories(res.data);
       } catch (err) {
         console.error(err);
@@ -38,119 +38,134 @@ const Create = ({ token }) => {
   }, [success]);
 
   const closeErrorAlert = () => setError(null);
-  const closeSucessAlert = () => setSuccess(null);
+  const closeSuccessAlert = () => setSuccess(null);
 
   const handleNameChange = (e) => {
-    setStockData({ ...stockData, name: e.target.value });
+    setUpdateData({ ...updateData, name: e.target.value });
     setError("");
     setSuccess("");
   };
 
   const handleTickerChange = (e) => {
-    setStockData({ ...stockData, ticker: e.target.value });
+    setUpdateData({ ...updateData, ticker: e.target.value });
     setError("");
     setSuccess("");
   };
 
   const handleDescriptionChange = (e) => {
-    setStockData({ ...stockData, description: e });
+    setUpdateData({ ...updateData, description: e });
     setError("");
     setSuccess("");
   };
 
   const handleURLChange = (e) => {
-    setStockData({ ...stockData, url: e.target.value });
+    setUpdateData({ ...updateData, url: e.target.value });
     setError("");
     setSuccess("");
   };
 
   const handleToggle = (id) => {
-    // array.indexOf(item) - returns the index of the item that you're
-    // searching for in an array; if item is not found, returns -1
-    const clickedCategoryId = stockData.categories.indexOf(id);
-    const all = [...stockData.categories];
+    const clickedCategoryId = updateData.categories.indexOf(id);
+    const all = [...updateData.categories];
 
     if (clickedCategoryId === -1) {
       all.push(id);
     } else {
-      // array.splice(elementToDelete, numberOfElementsToBeDeleted)
-      // returns the deleted elements
       all.splice(clickedCategoryId, 1);
     }
 
-    setStockData({ ...stockData, categories: all });
+    setUpdateData({ ...updateData, categories: all });
     setError("");
     setSuccess("");
   };
 
   const handleTypeClick = (e) => {
-    setStockData({ ...stockData, type: e.target.value });
+    setUpdateData({ ...updateData, type: e.target.value });
     setError("");
     setSuccess("");
   };
 
   const handleRatingClick = (e) => {
-    setStockData({ ...stockData, rating: e.target.value });
+    setUpdateData({ ...updateData, rating: e.target.value });
     setError("");
     setSuccess("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (token) {
-      setButtonText("Creating stock...");
-    }
-
-    const {
-      name,
-      ticker,
-      description,
-      url,
-      categories,
-      type,
-      rating
-    } = stockData;
+    setButtonText("Updating Stock...");
 
     try {
-      const body = { name, ticker, description, url, categories, type, rating };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const {
+        name,
+        ticker,
+        description,
+        url,
+        categories,
+        type,
+        rating
+      } = updateData;
+
+      let dynamicEndpoint =
+        isAuth() && isAuth().role === "admin"
+          ? `${API}/stock/admin/${oldStock._id}`
+          : `${API}/stock/${oldStock._id}`;
+
+      const res = await axios.put(
+        dynamicEndpoint,
+        {
+          name,
+          ticker,
+          description,
+          url,
+          categories,
+          type,
+          rating
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      };
+      );
 
-      const res = await axios.post(`${API}/stock`, body, config);
-
-      setButtonText("Submit");
-
-      setStockData({
-        name: "",
-        url: "",
-        type: "",
-        categories: [],
-        rating: "",
-        ticker: "",
-        description: ""
+      setButtonText("Stock Updated");
+      setTimeout(() => setButtonText("Update Stock"), 1000);
+      setUpdateData({
+        name: res.data.name,
+        ticker: res.data.ticker,
+        description: res.data.description,
+        url: res.data.url,
+        categories: res.data.categories,
+        type: res.data.type,
+        rating: res.data.rating
       });
-
-      setSuccess(`${name} is created`);
+      setSuccess(`${res.data.name} is updated.`);
     } catch (err) {
-      setButtonText("Submit");
+      setUpdateData({
+        name: oldStock.name,
+        ticker: oldStock.ticker,
+        description: oldStock.description,
+        url: oldStock.url,
+        categories: oldStock.categories,
+        type: oldStock.type,
+        rating: oldStock.rating
+      });
+      setButtonText("Update Stock");
       setError(err.response.data.error);
     }
   };
 
-  const createStockForm = () => (
+  const updateStockForm = () => (
     <form onSubmit={handleSubmit}>
-      <div className="form-group">
+      <div className="form-goup">
         <label className="text-muted bold">Company Name</label>
         <input
           type="text"
-          name="name"
           className="form-control"
+          value={updateData.name}
           onChange={handleNameChange}
-          value={stockData.name}
+          name="name"
         />
       </div>
       <div className="form-group">
@@ -159,41 +174,32 @@ const Create = ({ token }) => {
           type="text"
           name="ticker"
           className="form-control"
+          value={updateData.ticker}
           onChange={handleTickerChange}
-          value={stockData.ticker}
         />
       </div>
       <div className="form-group">
         <label className="text-muted bold">Company Description</label>
-        <Quill
-          onChange={handleDescriptionChange}
-          value={stockData.description}
+        <ReactQuill
           theme="bubble"
-          className="pb-5 mb-3 quill"
+          value={updateData.description}
+          onChange={handleDescriptionChange}
+          className="quill pb-5 mb-3"
         />
       </div>
       <div className="form-group">
-        <label className="text-muted">
-          <strong>Company Website</strong>
-        </label>
+        <label className="text-muted bold">Company Website</label>
         <input
           type="url"
           name="url"
           className="form-control"
+          value={updateData.url}
           onChange={handleURLChange}
-          value={stockData.url}
         />
       </div>
-
-      <div>
-        <button
-          disabled={!token}
-          type="submit"
-          className={`btn btn-outline-${
-            isAuth() || token ? "success" : "danger"
-          } bold`}
-        >
-          {isAuth() || token ? buttonText : "Login to Submit"}
+      <div className="form-group">
+        <button className="btn btn-outline-success bold" type="submit">
+          {buttonText}
         </button>
       </div>
     </form>
@@ -208,6 +214,9 @@ const Create = ({ token }) => {
             type="checkbox"
             onChange={() => handleToggle(c._id)}
             className="mr-2"
+            checked={updateData.categories.find(
+              (oldCategory) => oldCategory.name === c.name
+            )}
           />
           <label className="form-check-label">{c.name}</label>
         </li>
@@ -223,7 +232,7 @@ const Create = ({ token }) => {
             type="radio"
             readOnly
             onClick={handleTypeClick}
-            checked={stockData.type === "Growth"}
+            checked={updateData.type === "Growth"}
             value="Growth"
             className="form-check-input"
             name="type"
@@ -238,7 +247,7 @@ const Create = ({ token }) => {
             type="radio"
             readOnly
             onClick={handleTypeClick}
-            checked={stockData.type === "Value"}
+            checked={updateData.type === "Value"}
             value="Value"
             className="form-check-input"
             name="type"
@@ -258,7 +267,7 @@ const Create = ({ token }) => {
             readOnly
             name="rating"
             value="Buy"
-            checked={stockData.rating === "Buy"}
+            checked={updateData.rating === "Buy"}
             onClick={handleRatingClick}
             className="form-check-input"
           />
@@ -274,7 +283,7 @@ const Create = ({ token }) => {
             name="rating"
             value="Sell"
             onClick={handleRatingClick}
-            checked={stockData.rating === "Sell"}
+            checked={updateData.rating === "Sell"}
             className="form-check-input"
           />
           Sell
@@ -287,9 +296,9 @@ const Create = ({ token }) => {
     <Layout>
       <div className="row">
         <div className="col-md-12">
-          <h1 className="text-center">Add New Stock</h1>
+          <h1 className="text-center">Edit Stock</h1>
           <br />
-          {success && showSuccessMessage(success, closeSucessAlert)}
+          {success && showSuccessMessage(success, closeSuccessAlert)}
           {error && showErrorMessage(error, closeErrorAlert)}
         </div>
       </div>
@@ -312,15 +321,23 @@ const Create = ({ token }) => {
           </div>
         </div>
 
-        <div className="col-md-8">{createStockForm()}</div>
+        <div className="col-md-8">{updateStockForm()}</div>
       </div>
     </Layout>
   );
 };
 
-Create.getInitialProps = ({ req }) => {
-  const token = getCookie("token", req);
-  return { token };
+Update.getInitialProps = async ({ req, query, token }) => {
+  try {
+    const res = await axios.get(`${API}/stock/${query.id}`);
+
+    return {
+      oldStock: res.data,
+      token
+    };
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-export default Create;
+export default withUser(Update);

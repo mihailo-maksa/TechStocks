@@ -29,7 +29,7 @@ router.post(
 
 router.get("/categories", list);
 
-router.get("/category/:slug", read);
+router.post("/category/:slug", read); // POST because of easier data transfer
 
 router.put(
   "/category/:slug",

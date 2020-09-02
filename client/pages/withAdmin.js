@@ -8,6 +8,7 @@ const withAdmin = (Page) => {
   WithAdminUser.getInitialProps = async (ctx) => {
     const token = getCookie("token", ctx.req);
     let user = null;
+    let userStocks = [];
 
     if (token) {
       try {
@@ -18,10 +19,12 @@ const withAdmin = (Page) => {
           }
         });
 
-        user = res.data;
+        user = res.data.user;
+        userStocks = res.data.userStocks;
       } catch (err) {
         if (err.response.status === 401) {
           user = null;
+          userStocks = [];
         }
         console.error(err);
       }
@@ -35,6 +38,7 @@ const withAdmin = (Page) => {
       return {
         ...(Page.getInitialProps ? await Page.getInitialProps(ctx) : {}),
         user,
+        userStocks,
         token
       };
     }

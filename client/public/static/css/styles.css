@@ -15,6 +15,27 @@ a:hover {
   text-decoration: none;
 }
 
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.green-border {
+  border: 1px solid var(--primary-color);
+}
+
+.bold-green-border {
+  border: 2px solid var(--primary-color) !important;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 #nprogress .bar {
   height: 4px !important;
   background: var(--primary-color) !important;
@@ -36,6 +57,36 @@ a:hover {
 
 .bold {
   font-weight: bold;
+}
+
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.link-list {
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.admin-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.not-underline {
+  text-decoration: none !important;
 }
 
 .bolder {
@@ -86,4 +137,40 @@ a:hover {
 .quill {
   border: 1px solid #ced4da;
   border-radius: 5px;
+}
+
+.category-list {
+  max-height: 100px;
+  overflow-y: scroll;
+}
+
+.category-content {
+  border: 1px solid var(--primary-color);
+}
+
+.stock-url {
+  font-size: 12px;
+}
+
+.stock-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rate-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.stock-info {
+  border: 1px solid var(--primary-color);
+  padding: 3px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 77%;
 }

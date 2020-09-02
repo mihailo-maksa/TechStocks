@@ -16,10 +16,9 @@ const StockSchema = new mongoose.Schema(
       max: 20
     },
     description: {
-      type: String,
-      required: true,
-      trim: true,
-      min: 20
+      type: {},
+      min: 20,
+      max: 20000
     },
     url: {
       // URL to company's website, investor presentation,
@@ -49,17 +48,40 @@ const StockSchema = new mongoose.Schema(
       }
     ],
     type: {
-      /* types: Growth, High Growth, Speculative, Value, Dividend,
-      Dividend Growth, Defensive, Disruptive, Other, etc. */
+      // types: Growth or Value
       type: String,
       default: "Growth"
     },
     rating: {
-      // ratings: Strong Buy, Buy, Hold, Sell, Strong Sell
+      // ratings: Buy or Sell
       type: String,
       default: "Buy"
     },
-    clicks: {
+    clicks: [
+      {
+        user: {
+          type: ObjectId,
+          ref: "User"
+        }
+      }
+    ],
+    ratings: [
+      {
+        user: {
+          type: ObjectId,
+          ref: "User"
+        },
+        rate: {
+          type: String,
+          default: "Bullish"
+        }
+      }
+    ],
+    bullishRatings: {
+      type: Number,
+      default: 0
+    },
+    bearishRatings: {
       type: Number,
       default: 0
     }

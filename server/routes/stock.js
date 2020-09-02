@@ -9,8 +9,21 @@ const {
 const { runValidation } = require("../validators/index");
 
 //controllers
-const { create, list, read, update, remove } = require("../controllers/stock");
-const { requireSignin, authMiddleware } = require("../controllers/auth");
+const {
+  create,
+  list,
+  read,
+  update,
+  remove,
+  clickCount,
+  rateStock
+} = require("../controllers/stock");
+const {
+  requireSignin,
+  authMiddleware,
+  adminMiddleware,
+  canUpdateDeleteStock
+} = require("../controllers/auth");
 
 router.post(
   "/stock",
@@ -21,19 +34,41 @@ router.post(
   create
 );
 
-router.get("/stocks", list);
+router.post("/stocks", requireSignin, adminMiddleware, list);
 
-router.get("/stock/:slug", read);
+router.put("/click-count", requireSignin, authMiddleware, clickCount);
+
+router.put("/rate-stock", requireSignin, authMiddleware, rateStock);
+
+router.get("/stock/:id", read);
 
 router.put(
-  "/stock/:slug",
+  "/stock/:id",
   stockUpdateValidator,
   runValidation,
   requireSignin,
   authMiddleware,
+  canUpdateDeleteStock,
   update
 );
 
-router.delete("/stock/:slug", requireSignin, authMiddleware, remove);
+router.put(
+  "/stock/admin/:id",
+  stockUpdateValidator,
+  runValidation,
+  requireSignin,
+  adminMiddleware,
+  update
+);
+
+router.delete(
+  "/stock/:id",
+  requireSignin,
+  authMiddleware,
+  canUpdateDeleteStock,
+  remove
+);
+
+router.delete("/stock/admin/:id", requireSignin, adminMiddleware, remove);
 
 module.exports = router;

@@ -53,13 +53,14 @@ const Layout = ({ children }) => {
       </li>
 
       <li className="nav-item">
-        <Link href="/user/stock/create">
-          <a className="nav-link text-light btn btn-success bold">
-            <i className="fas fa-plus" />
-            {"  "}
-            Add Stock
-          </a>
-        </Link>
+        <a
+          href="/user/stock/create"
+          className="nav-link text-light btn btn-success bold"
+        >
+          <i className="fas fa-plus" />
+          {"  "}
+          Add Stock
+        </a>
       </li>
 
       {!isAuth() && (
