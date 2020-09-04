@@ -77,7 +77,8 @@ const AllStocks = ({ stocks, totalStocks, stocksLimit, stockSkip, token }) => {
             className="pull-right"
             style={{ fontSize: "15px", maxWidth: "20%" }}
           >
-            {moment(s.createdAt).fromNow()} by {s.postedBy.name}
+            {moment(s.createdAt).fromNow()}{" "}
+            {s.postedBy && `by ${s.postedBy.name}`}
           </span>
         </div>
 

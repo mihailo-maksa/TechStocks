@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+// import validators
+const { userUpdateValidator } = require("../validators/auth");
+const { runValidation } = require("../validators/index.js");
+
 // import middlewares
 const {
   requireSignin,
@@ -9,9 +13,19 @@ const {
 } = require("../controllers/auth");
 
 // import controller functions
-const { read } = require("../controllers/user");
+const { read, update } = require("../controllers/user");
 
 router.get("/user", requireSignin, authMiddleware, read);
+
 router.get("/admin", requireSignin, adminMiddleware, read);
+
+router.put(
+  "/user",
+  userUpdateValidator,
+  runValidation,
+  requireSignin,
+  authMiddleware,
+  update
+);
 
 module.exports = router;

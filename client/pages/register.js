@@ -5,7 +5,7 @@ import Router from "next/router";
 import axios from "axios";
 import { showErrorMessage, showSuccessMessage } from "../utils/alerts";
 import { API } from "../config";
-import { isAuth } from "../utils/auth";
+import { isAuth, setCookie } from "../utils/auth";
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -17,10 +17,23 @@ const Register = () => {
   const [success, setSuccess] = useState("");
   const [buttonText, setButtonText] = useState("Register");
   const [hidden, setHidden] = useState(true);
+  const [loadedCategories, setLoadedCategories] = useState([]);
+  const [favoriteCategories, setFavoriteCategories] = useState([]);
+
+  const loadCategories = async () => {
+    try {
+      const res = await axios.get(`${API}/categories`);
+
+      setLoadedCategories(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     isAuth() && Router.push("/");
-  }, []);
+    loadCategories();
+  }, [success]);
 
   const closeSuccessAlert = () => setSuccess(null);
   const closeErrorAlert = () => setError(null);
@@ -43,7 +56,8 @@ const Register = () => {
           // body
           username: userData.username,
           email: userData.email,
-          password: userData.password
+          password: userData.password,
+          categories: favoriteCategories
         },
         { headers: { "Content-Type": "application/json" } } // config
       );
@@ -61,6 +75,34 @@ const Register = () => {
       setError(err.response.data.error);
     }
   };
+
+  const handleToggle = (id) => {
+    const clickedCategoryId = favoriteCategories.indexOf(id);
+    const allChosenCategories = [...favoriteCategories];
+
+    if (clickedCategoryId === -1) {
+      allChosenCategories.push(id);
+    } else {
+      allChosenCategories.splice(clickedCategoryId, 1);
+    }
+
+    setFavoriteCategories(allChosenCategories);
+    setError("");
+    setSuccess("");
+  };
+
+  const showCategories = () =>
+    loadedCategories &&
+    loadedCategories.map((c) => (
+      <li className="list-unstyled ml-4" key={c._id}>
+        <input
+          type="checkbox"
+          onChange={() => handleToggle(c._id)}
+          className="mr-2"
+        />
+        <label className="form-check-label">{c.name}</label>
+      </li>
+    ));
 
   const registerForm = () => (
     <form onSubmit={handleSubmit}>
@@ -107,6 +149,14 @@ const Register = () => {
           </div>
         </div>
       </div>
+
+      <div className="form-group">
+        <label className="text-muted ml-4 bold">
+          What topics are you interested in the most?
+        </label>
+        <ul className="list-group category-list">{showCategories()}</ul>
+      </div>
+
       <div className="form-group">
         <button className="btn btn-outline-success bold-btn">
           {buttonText}

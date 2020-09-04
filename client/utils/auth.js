@@ -59,7 +59,7 @@ export const removeLocalStorage = (key) => {
 };
 
 // authenticate user on the client side
-// (by passing data to the cookie and  localStorage during login)
+// (by passing data to the cookie and localStorage during login)
 export const authenticate = (response, next) => {
   setCookie("token", response.data.token);
   setLocalStorage("user", response.data.user);
@@ -86,4 +86,14 @@ export const logout = () => {
   removeCookie("token");
   removeLocalStorage("user");
   Router.push("/login");
+};
+
+// update user in the localStorage after updating profile from the dashboard
+export const updateUser = (user, next) => {
+  if (process.browser) {
+    if (localStorage.getItem("user")) {
+      localStorage.setItem("user", JSON.stringify(user));
+      next();
+    }
+  }
 };

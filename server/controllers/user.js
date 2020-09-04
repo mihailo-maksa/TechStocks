@@ -31,3 +31,33 @@ exports.read = async (req, res) => {
     res.status(500).send("Internal server error.");
   }
 };
+
+exports.update = async (req, res) => {
+  try {
+    const { name, password, categories } = req.body;
+
+    if (password && password.length < 8) {
+      return res
+        .status(400)
+        .json({ error: "Password must be at least 8 characters long." });
+    }
+
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.user._id },
+      { name, password, categories },
+      { new: true, upsert: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(400).json({ error: "Could not find user to update." });
+    }
+
+    updatedUser.hashed_password = undefined;
+    updatedUser.salt = undefined;
+
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal server error.");
+  }
+};

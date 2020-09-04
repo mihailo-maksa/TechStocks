@@ -18,19 +18,19 @@ AWS.config.update({
 const ses = new AWS.SES({ apiVersion: "2010-12-01" });
 
 exports.register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, categories } = req.body;
 
   try {
     const user = await User.findOne({ email });
 
     // check if user already exists
     if (user) {
-      return res.status(400).json({ error: "Email is taken" });
+      return res.status(400).json({ error: "Email is taken." });
     }
 
     // generate token with username, email and password
     const token = jwt.sign(
-      { username, email, password },
+      { username, email, password, categories },
       process.env.JWT_ACCOUNT_ACTIVATION,
       { expiresIn: "15m" }
     );
@@ -71,7 +71,7 @@ exports.registerActivate = (req, res) => {
         });
       }
 
-      const { username, email, password } = jwt.decode(token);
+      const { username, email, password, categories } = jwt.decode(token);
 
       const realUsername = shortId.generate();
 
@@ -86,7 +86,8 @@ exports.registerActivate = (req, res) => {
           username: realUsername,
           name: username,
           email,
-          password
+          password,
+          categories
         });
 
         await newUser.save((err, user) => {

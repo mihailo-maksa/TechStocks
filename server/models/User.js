@@ -38,7 +38,14 @@ const UserSchema = new mongoose.Schema(
     resetPasswordLink: {
       data: String,
       default: ""
-    }
+    },
+    categories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        required: true
+      }
+    ]
   },
   { timestamps: true }
 );

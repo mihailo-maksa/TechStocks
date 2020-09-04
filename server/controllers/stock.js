@@ -1,5 +1,17 @@
 const Stock = require("../models/Stock");
+const User = require("../models/User");
+const Category = require("../models/Category");
 const slugify = require("slugify");
+const AWS = require("aws-sdk");
+const { stockPublishedParams } = require("../utils/email");
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
+});
+
+const ses = new AWS.SES({ apiVersion: "2010-12-01" });
 
 exports.create = async (req, res) => {
   const { name, url, categories, type, rating, ticker, description } = req.body;
@@ -18,15 +30,45 @@ exports.create = async (req, res) => {
   stock.postedBy = req.user._id;
 
   try {
-    await stock.save((err, data) => {
+    await stock.save(async (err, data) => {
       if (err) {
         return res.status("400").json({ erorr: "Stock already exists." });
       }
 
       res.json(data);
+
+      // find all users with favorite category
+      try {
+        const foundUsers = await User.find({ categories: { $in: categories } });
+
+        if (!foundUsers) {
+          throw new Error("Stock published email error!");
+        }
+
+        const foundCategories = await Category.find({
+          _id: { $in: categories }
+        });
+
+        data.categories = foundCategories;
+
+        for (let i = 0; i < foundUsers.length; i++) {
+          const params = stockPublishedParams(foundUsers[i].email, data);
+
+          const emailData = await ses.sendEmail(params).promise();
+
+          console.log(
+            `Stock published email no. ${i + 1} was sent to ${
+              foundUsers[i].email
+            }: EMAIL DATA - ${emailData}`
+          );
+        }
+      } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal server error.");
+      }
     });
   } catch (err) {
-    console.erorr(err);
+    console.error(err);
     res.status(500).send("Internal server error.");
   }
 };

@@ -39,70 +39,80 @@ const User = ({ user, userStocks, token }) => {
   };
 
   const listOfStocks = () =>
-    userStocks.map((s) => (
-      <div className="row alert alert-light p-2 green-border" key={s._id}>
-        <div className="col-md-8">
-          <Link href={`/stocks/s/${s.slug}`}>
-            <a target="_blank">
-              <h5
-                className="pt-2 text-dark bold underline"
-                style={{ display: "inline" }}
-              >
-                {s.name}
-              </h5>{" "}
-              <span
-                className="pt-2 text-dark not-underline stock-url"
-                style={{ fontSize: "16px" }}
-              >
-                ({s.ticker})
-              </span>
-            </a>
-          </Link>
-        </div>
-        <div
-          className="col-md-4 pt-2"
-          style={{ position: "relative", left: "7%" }}
-        >
-          <span
-            className="pull-right"
-            style={{ fontSize: "15px", maxWidth: "20%" }}
-          >
-            {moment(s.createdAt).fromNow()} by {s.postedBy.name}
-          </span>
-        </div>
-        <div className="col-md-12 mt-3">
-          <div className="stock-bottom">
-            <div>
-              <span className="badge text-dark">
-                {s.type} | {s.rating} |
-              </span>
-              {s.categories.map((c, i) => (
-                <span className="badge text-success" key={i}>
-                  {c.name}
+    userStocks.length > 0 ? (
+      userStocks.map((s) => (
+        <div className="row alert alert-light p-2 green-border" key={s._id}>
+          <div className="col-md-8">
+            <Link href={`/stocks/s/${s.slug}`}>
+              <a target="_blank">
+                <h5
+                  className="pt-2 text-dark bold underline"
+                  style={{ display: "inline" }}
+                >
+                  {s.name}
+                </h5>{" "}
+                <span
+                  className="pt-2 text-dark not-underline stock-url"
+                  style={{ fontSize: "16px" }}
+                >
+                  ({s.ticker})
                 </span>
-              ))}
-            </div>
-            <span className="badge text-secondary pull-right">
-              {s.clicks.length}{" "}
-              {s.clicks.length === 1
-                ? "unique user click"
-                : "unique user clicks"}
-            </span>
+              </a>
+            </Link>
+          </div>
+          <div
+            className="col-md-4 pt-2"
+            style={{ position: "relative", left: "7%" }}
+          >
             <span
-              className="badge btn bold text-danger pull-right"
-              onClick={() => confirmDelete(s._id)}
+              className="pull-right"
+              style={{ fontSize: "15px", maxWidth: "20%" }}
             >
-              Delete
+              {moment(s.createdAt).fromNow()}{" "}
+              {s.postedBy && `by ${s.postedBy.name}`}
             </span>
-            <a href={`/user/stock/${s._id}`}>
-              <span className="badge btn bold text-success pull-right">
-                Update
+          </div>
+          <div className="col-md-12 mt-3">
+            <div className="stock-bottom">
+              <div>
+                <span className="badge text-dark">
+                  {s.type} | {s.rating} |
+                </span>
+                {s.categories.map((c, i) => (
+                  <span className="badge text-success" key={i}>
+                    {c.name}
+                  </span>
+                ))}
+              </div>
+              <span className="badge text-secondary pull-right">
+                {s.clicks.length}{" "}
+                {s.clicks.length === 1
+                  ? "unique user click"
+                  : "unique user clicks"}
               </span>
-            </a>
+              <span
+                className="badge btn bold text-danger pull-right"
+                onClick={() => confirmDelete(s._id)}
+              >
+                Delete
+              </span>
+              <a href={`/user/stock/${s._id}`}>
+                <span className="badge btn bold text-success pull-right">
+                  Update
+                </span>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-    ));
+      ))
+    ) : (
+      <a
+        href="/user/stock/create"
+        className="nav-link btn bold btn-outline-primary p-2"
+      >
+        Create Your First Stock
+      </a>
+    );
 
   return (
     <Layout>
