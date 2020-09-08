@@ -27,7 +27,9 @@ exports.create = async (req, res) => {
     ticker,
     description
   });
+
   stock.postedBy = req.user._id;
+  stock.clickCount = stock.clicks.length > 0 ? stock.clicks.length : 0;
 
   try {
     await stock.save(async (err, data) => {
@@ -161,15 +163,21 @@ exports.remove = async (req, res) => {
 };
 
 exports.clickCount = async (req, res) => {
+  if (!req.user._id) {
+    return;
+  }
+
   const { stockId } = req.body;
 
   try {
     let stock = await Stock.findById(stockId);
+    stock.clickCount = stock.clicks.length > 0 ? stock.clicks.length : 0;
 
     if (stock.clicks.some((click) => click.user.toString() === req.user._id)) {
-      return res
-        .status(400)
-        .json({ error: "Only one click is counted per user." });
+      return;
+      // return res
+      //   .status(400)
+      //   .json({ error: "Only one click is counted per user." });
     }
 
     stock.clicks.unshift({ user: req.user._id });
@@ -216,6 +224,57 @@ exports.rateStock = async (req, res) => {
 
       res.json(result);
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal server error.");
+  }
+};
+
+exports.popular = async (req, res) => {
+  try {
+    const popularStocks = await Stock.find()
+      .populate("postedBy", "name")
+      .populate("categories", "name")
+      .sort({ clickCount: -1 }) // from the largest to the smallest number
+      .limit(3);
+
+    if (!popularStocks) {
+      return res.status(400).json({ error: "No stocks found." });
+    }
+
+    res.json(popularStocks);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal server error.");
+  }
+};
+
+exports.popularInCategory = async (req, res) => {
+  const { slug } = req.params;
+
+  try {
+    const targetCategory = await Category.findOne({ slug });
+
+    try {
+      const popularStocksInCategory = await Stock.find({
+        categories: targetCategory
+      })
+        .populate("postedBy", "name")
+        .populate("categories", "name")
+        .sort({ clickCount: -1 })
+        .limit(3);
+
+      if (!popularStocksInCategory) {
+        return res
+          .status(400)
+          .json({ error: "No stocks found in this category." });
+      }
+
+      res.json(popularStocksInCategory);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Internal server error.");
+    }
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal server error.");

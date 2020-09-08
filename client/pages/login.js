@@ -120,7 +120,9 @@ const Login = () => {
             <a className="text-success bolder">Register</a>
           </Link>
           <Link href="/auth/password/forgot">
-            <a className="text-danger float-right bold">Forgot Password</a>
+            <a className="text-danger float-right bold forgot-password-link">
+              Forgot Password
+            </a>
           </Link>
         </p>
       </div>

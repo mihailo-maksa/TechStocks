@@ -64,6 +64,7 @@ const Stock = ({ query, stock, token }) => {
             value="Bullish"
             onClick={handleRateChange}
             checked={
+              loadedStock.postedBy &&
               loadedStock.ratings.find(
                 (rating) => rating.user === loadedStock.postedBy._id
               ) &&
@@ -82,6 +83,7 @@ const Stock = ({ query, stock, token }) => {
             className="form-check-input"
             value="Bearish"
             checked={
+              loadedStock.postedBy &&
               loadedStock.ratings.find(
                 (rating) => rating.user === loadedStock.postedBy._id
               ) &&
@@ -160,10 +162,12 @@ const Stock = ({ query, stock, token }) => {
               {loadedStock.type}
             </span>
           </div>
-          <div className="stock-info mb-2">
-            <span className="ml-1 bold">Posted By: </span>{" "}
-            <span className="ml-1">{loadedStock.postedBy.name}</span>
-          </div>
+          {loadedStock.postedBy && (
+            <div className="stock-info mb-2">
+              <span className="ml-1 bold">Posted By: </span>{" "}
+              <span className="ml-1">{loadedStock.postedBy.name}</span>
+            </div>
+          )}
           <div className="stock-info">
             <span className="ml-1 bold"> Date Posted: </span>
             <Moment format="DD/MM/YYYY" className="ml-1">
@@ -173,7 +177,7 @@ const Stock = ({ query, stock, token }) => {
         </div>
 
         <div className="stock-popularity col-md-5 flex-center">
-          <h3 className="text-center mb-2">Ratings</h3>
+          <h3 className="text-center mb-2 stock-ratings">Ratings</h3>
           <div className="stock-info mb-2 mt-3">
             <span className="ml-1 bold">Total Unique User Clicks: </span>
             <span className="badge badge-success ml-1 mt-1 mb-1">
@@ -195,7 +199,9 @@ const Stock = ({ query, stock, token }) => {
           </div>
           <div className="stock-info">
             <span className="ml-1 bold">
-              {loadedStock.postedBy.name}'s Rating:
+              {loadedStock.postedBy
+                ? `${loadedStock.postedBy.name}'s Rating`
+                : "Author's Rating:"}
             </span>
             <span
               className={`badge ml-2 mt-1 mb-1 badge-${

@@ -65,6 +65,10 @@ const StockSchema = new mongoose.Schema(
         }
       }
     ],
+    clickCount: {
+      type: Number,
+      default: 0
+    },
     ratings: [
       {
         user: {

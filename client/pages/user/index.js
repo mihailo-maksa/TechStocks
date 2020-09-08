@@ -65,7 +65,7 @@ const User = ({ user, userStocks, token }) => {
             style={{ position: "relative", left: "7%" }}
           >
             <span
-              className="pull-right"
+              className="pull-right postedBy-homepage"
               style={{ fontSize: "15px", maxWidth: "20%" }}
             >
               {moment(s.createdAt).fromNow()}{" "}
@@ -157,7 +157,7 @@ const User = ({ user, userStocks, token }) => {
           </ul>
         </div>
         <div className="col-md-8">
-          <h2 className="text-center mb-3">Your Stocks</h2>
+          <h2 className="text-center mb-2 user-stocks">Your Stocks</h2>
           <br />
           {listOfStocks()}
         </div>

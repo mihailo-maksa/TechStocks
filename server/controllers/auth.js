@@ -2,7 +2,7 @@ const AWS = require("aws-sdk");
 const User = require("../models/User");
 const Stock = require("../models/Stock");
 const jwt = require("jsonwebtoken");
-const shortId = require("shortId");
+const shortId = require("shortid");
 const expressJwt = require("express-jwt");
 const {
   registerEmailParams,

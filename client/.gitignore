@@ -2,7 +2,7 @@ node_modules
 .env
 .DS_Store
 *.txt
-TODO
+*.md
 .next
 next.config.js
 config.js

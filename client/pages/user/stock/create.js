@@ -4,6 +4,7 @@ import { API } from "../../../config";
 import Layout from "../../../components/Layout";
 import { showErrorMessage, showSuccessMessage } from "../../../utils/alerts";
 import dynamic from "next/dynamic";
+import { useMediaQuery } from "react-responsive";
 import { getCookie, isAuth } from "../../../utils/auth";
 import "react-quill/dist/quill.bubble.css";
 const Quill = dynamic(() => import("react-quill"), { ssr: false });
@@ -22,6 +23,8 @@ const Create = ({ token }) => {
   const [error, setError] = useState("");
   const [loadedCategories, setLoadedCategories] = useState([]);
   const [buttonText, setButtonText] = useState("Submit");
+
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -184,14 +187,31 @@ const Create = ({ token }) => {
           value={stockData.url}
         />
       </div>
+      {isMobile && (
+        <div className="col-md-4">
+          <div className="form-group">
+            <label className="text-muted ml-4 bold">Category</label>
+            <ul className="list-group category-list">{showCategories()}</ul>
+          </div>
 
-      <div>
+          <div className="form-group">
+            <label className="text-muted ml-4 bold">Stock Type</label>
+            {showTypes()}
+          </div>
+
+          <div className="form-group">
+            <label className="text-muted ml-4 bold">Personal Rating</label>
+            {showRatings()}
+          </div>
+        </div>
+      )}
+      <div className="form-group">
         <button
           disabled={!token}
           type="submit"
           className={`btn btn-outline-${
             isAuth() || token ? "success" : "danger"
-          } bold`}
+          } bold ${isMobile && "ml-3"}`}
         >
           {isAuth() || token ? buttonText : "Login to Submit"}
         </button>
@@ -295,23 +315,24 @@ const Create = ({ token }) => {
       </div>
 
       <div className="row">
-        <div className="col-md-4">
-          <div className="form-group">
-            <label className="text-muted ml-4 bold">Category</label>
-            <ul className="list-group category-list">{showCategories()}</ul>
-          </div>
+        {!isMobile && (
+          <div className="col-md-4">
+            <div className="form-group">
+              <label className="text-muted ml-4 bold">Category</label>
+              <ul className="list-group category-list">{showCategories()}</ul>
+            </div>
 
-          <div className="form-group">
-            <label className="text-muted ml-4 bold">Stock Type</label>
-            {showTypes()}
-          </div>
+            <div className="form-group">
+              <label className="text-muted ml-4 bold">Stock Type</label>
+              {showTypes()}
+            </div>
 
-          <div className="form-group">
-            <label className="text-muted ml-4 bold">Personal Rating</label>
-            {showRatings()}
+            <div className="form-group">
+              <label className="text-muted ml-4 bold">Personal Rating</label>
+              {showRatings()}
+            </div>
           </div>
-        </div>
-
+        )}
         <div className="col-md-8">{createStockForm()}</div>
       </div>
     </Layout>

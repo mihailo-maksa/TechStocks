@@ -58,12 +58,16 @@ const All = ({ user, token }) => {
   const listCategories = () =>
     categories &&
     categories.map((c, i) => (
-      <div key={i} className="bg-light p-3 col-md-6 category-link">
+      <div
+        key={i}
+        style={{ margin: "1px" }}
+        className="admin-category-view bg-light p-3 col-md-12 category-link list-of-categories"
+      >
         <div>
           <div className="row">
             <div className="col-md-3">
               <img
-                className="category-img pr-3"
+                className="category-img pr-3 category-admin"
                 src={c.image && c.image.url}
                 alt={c.name}
               />
@@ -71,7 +75,9 @@ const All = ({ user, token }) => {
             <div className="col-md-6">
               <Link href={`/stocks/${c.slug}`} key={i}>
                 <a>
-                  <h3>{c.name}</h3>
+                  <h3 className="admin-category-title category-admin">
+                    {c.name}
+                  </h3>
                 </a>
               </Link>
             </div>
@@ -104,7 +110,7 @@ const All = ({ user, token }) => {
         </div>
       </div>
 
-      <div className="row">{listCategories()}</div>
+      <div className="row admin-categories">{listCategories()}</div>
     </Layout>
   );
 };

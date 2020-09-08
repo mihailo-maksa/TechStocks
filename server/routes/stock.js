@@ -6,6 +6,7 @@ const {
   stockCreateValidator,
   stockUpdateValidator
 } = require("../validators/stock");
+
 const { runValidation } = require("../validators/index");
 
 //controllers
@@ -16,8 +17,11 @@ const {
   update,
   remove,
   clickCount,
-  rateStock
+  rateStock,
+  popular,
+  popularInCategory
 } = require("../controllers/stock");
+
 const {
   requireSignin,
   authMiddleware,
@@ -39,6 +43,10 @@ router.post("/stocks", requireSignin, adminMiddleware, list);
 router.put("/click-count", requireSignin, authMiddleware, clickCount);
 
 router.put("/rate-stock", requireSignin, authMiddleware, rateStock);
+
+router.get("/stock/popular", popular);
+
+router.get("/stock/popular/:slug", popularInCategory);
 
 router.get("/stock/:id", read);
 

@@ -93,6 +93,18 @@ ul {
   font-weight: bolder;
 }
 
+.font-12 {
+  font-size: 12px;
+}
+
+.font-14 {
+  font-size: 14px;
+}
+
+.font-16 {
+  font-size: 16px;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -174,3 +186,125 @@ ul {
   align-items: center;
   width: 77%;
 }
+
+.list-of-trending-stocks {
+  margin-left: -1%;
+}
+
+.flex-center-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.white-hover:hover {
+  color: #fff !important;
+}
+
+/* Responsive Styling */
+
+@media screen and (max-width: 600px) {
+  .list-of-trending-stocks {
+    margin-right: 5%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .homepage-category {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .postedBy-homepage {
+    position: relative !important;
+    left: 50% !important;
+  }
+
+  .admin-categories {
+    margin: 0 5%;
+  }
+
+  .user-stocks {
+    margin-top: 35px;
+  }
+
+  .stock-ratings {
+    margin-top: 30px;
+  }
+
+  .delete-stock-admin {
+    margin-right: 7px;
+  }
+
+  .popular-in-category {
+    margin-top: 15px;
+  }
+
+  .postedBy-category {
+    position: relative;
+    left: 25%;
+  }
+
+  .category-view-image {
+    position: relative;
+    left: 20%;
+  }
+
+  .category-admin {
+    position: relative;
+    left: 38%;
+  }
+
+  .home-img {
+    position: relative;
+    left: 30%;
+  }
+
+  .home-title {
+    position: relative;
+    left: 30%;
+  }
+
+  .list-of-categories {
+    margin: 0 17%;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  /*  */
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .homepage-category-title {
+    margin-left: 15px;
+  }
+
+  .postedBy-homepage {
+    position: relative !important;
+    right: 60px !important;
+  }
+
+  .admin-category-title {
+    position: relative !important;
+    right: 25% !important;
+  }
+
+  .forgot-password-link {
+    position: relative;
+    right: 60%;
+  }
+}
+
+@media screen and (min-width: 993px) {
+  .admin-category-title {
+    position: relative !important;
+    right: 30% !important;
+  }
+}
+
+/* FIX */
+/* Mobile view homepage */
+/* Category view */

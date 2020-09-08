@@ -7,6 +7,7 @@ import moment from "moment";
 import InfiniteScroll from "react-infinite-scroller";
 import { getCookie } from "../../../utils/auth";
 import withAdmin from "../../withAdmin";
+import { useMediaQuery } from "react-responsive";
 import { showErrorMessage, showSuccessMessage } from "../../../utils/alerts";
 
 const AllStocks = ({ stocks, totalStocks, stocksLimit, stockSkip, token }) => {
@@ -16,6 +17,8 @@ const AllStocks = ({ stocks, totalStocks, stocksLimit, stockSkip, token }) => {
   const [size, setSize] = useState(totalStocks);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const closeSuccessAlert = () => setSuccess(null);
   const closeErrorAlert = () => setError(null);
@@ -74,12 +77,27 @@ const AllStocks = ({ stocks, totalStocks, stocksLimit, stockSkip, token }) => {
           style={{ position: "relative", left: "16%" }}
         >
           <span
-            className="pull-right"
+            className="pull-right postedBy-homepage"
             style={{ fontSize: "15px", maxWidth: "20%" }}
           >
             {moment(s.createdAt).fromNow()}{" "}
             {s.postedBy && `by ${s.postedBy.name}`}
           </span>
+
+          {isMobile && (
+            <span
+              className="badge text-right text-secondary bold"
+              style={{
+                position: "relative",
+                right: s.postedBy ? "50%" : "38%"
+              }}
+            >
+              {s.clicks.length}{" "}
+              {s.clicks.length === 1
+                ? "unique user click"
+                : "unique user clicks"}
+            </span>
+          )}
         </div>
 
         <div className="col-md-12 stock-bottom">
@@ -96,21 +114,25 @@ const AllStocks = ({ stocks, totalStocks, stocksLimit, stockSkip, token }) => {
             ))}
           </span>
 
-          <span className="badge text-right text-secondary pull-right bold">
-            {s.clicks.length}{" "}
-            {s.clicks.length === 1 ? "unique user click" : "unique user clicks"}
-          </span>
+          {!isMobile && (
+            <span className="badge text-right text-secondary pull-right bold">
+              {s.clicks.length}{" "}
+              {s.clicks.length === 1
+                ? "unique user click"
+                : "unique user clicks"}
+            </span>
+          )}
 
-          <span
-            className="badge btn bold text-danger pull-right"
+          <button
+            className="white-hover delete-stock-admin badg btn bold btn-outline-danger text-danger pull-right"
             onClick={() => confirmDelete(s._id)}
           >
             Delete
-          </span>
+          </button>
           <a href={`/user/stock/${s._id}`}>
-            <span className="badge btn bold text-success pull-right">
+            <button className="badg white-hover btn bold text-success btn-outline-success pull-right">
               Update
-            </span>
+            </button>
           </a>
         </div>
       </div>

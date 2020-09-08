@@ -9,7 +9,7 @@ Router.onRouteChangeStart = (url) => NProgress.start();
 Router.onRouteChangeComplete = (url) => NProgress.done();
 Router.onRouteChangeError = (url) => NProgress.done();
 
-const Layout = ({ children }) => {
+const Layout = ({ children, customHead }) => {
   const head = () => (
     <Head>
       <title> Discover & Share Your Favorite Tech Stocks | TechStocks </title>
@@ -23,8 +23,10 @@ const Layout = ({ children }) => {
       />
       <meta name="robots" content="index, follow" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="canonical" href="http://example.com/" />{" "}
-      {/* CHANGE href ATTRIBUTE HERE (i.e. Domain Name) BEFORE DEPLOYING*/}
+      <link
+        rel="canonical"
+        href="http://ec2-3-21-164-109.us-east-2.compute.amazonaws.com"
+      />{" "}
       <link
         rel="stylesheet"
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -63,7 +65,7 @@ const Layout = ({ children }) => {
         </a>
       </li>
 
-      {!isAuth() && (
+      {process.browser && !isAuth() && (
         <React.Fragment>
           <li className="nav-item ml-auto">
             <Link href="/register">
@@ -78,7 +80,7 @@ const Layout = ({ children }) => {
         </React.Fragment>
       )}
 
-      {isAuth() && isAuth().role === "admin" && (
+      {process.browser && isAuth() && isAuth().role === "admin" && (
         <li className="nav-item ml-auto">
           <Link href="/admin">
             <a className="nav-link text-light">
@@ -89,7 +91,7 @@ const Layout = ({ children }) => {
         </li>
       )}
 
-      {isAuth() && isAuth().role === "subscriber" && (
+      {process.browser && isAuth() && isAuth().role === "subscriber" && (
         <li className="nav-item ml-auto">
           <Link href="/user">
             <a className="nav-link text-light">
@@ -100,7 +102,7 @@ const Layout = ({ children }) => {
         </li>
       )}
 
-      {isAuth() && (
+      {process.browser && isAuth() && (
         <li className="nav-item">
           <a onClick={logout} className="nav-link text-light pointer">
             <i className="fas fa-sign-out-alt" /> {"  "}
@@ -113,7 +115,8 @@ const Layout = ({ children }) => {
 
   return (
     <React.Fragment>
-      {head()} {nav()} <div className="container pt-5 pb-5">{children}</div>
+      {customHead ? customHead() : head()} {nav()}{" "}
+      <div className="container pt-5 pb-5">{children}</div>
     </React.Fragment>
   );
 };

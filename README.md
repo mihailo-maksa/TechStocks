@@ -6,7 +6,7 @@ A place for everyone to share their favorite tech stock picks. Let's beat the ma
 
 ## Technologies Used
 
-The MERN Stack (MongoDB, Express, React, Node.js), Next.js, Bootstrap and AWS Services (EC2, S3, SES, IAM).
+The MERN Stack (MongoDB, Express, React, Node.js), Next.js, Bootstrap and AWS Services (EC2, S3, SES, IAM, Route 53).
 
 ## App Info
 
